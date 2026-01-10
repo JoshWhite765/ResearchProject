@@ -12,33 +12,37 @@ import re
 login("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")
 
 
+# Only If i want to use the LLaMA instead of Mistral model, uncomment below
+########
 # # LOAD LLaMA 2-13B
-model_id = "meta-llama/Llama-2-13b-chat-hf"
-
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    device_map="auto",      # auto-assign layers to GPU/CPU
-    load_in_4bit=True,      # 4-bit quantization for 12GB GPU
-    torch_dtype=torch.float16,
-    trust_remote_code=True
-)
-model.eval()
-
-
-# Only If i want to use the Mistral model instead of LLaMA, uncomment below
-# Mistral fake-news LoRA
-# model_id = "mistralai/Mistral-7B-Instruct-v0.1"
-# peft_model_name = "bpavlsh/Mistral-Fake-News-Detection"
+# model_id = "meta-llama/Llama-2-13b-chat-hf"
 
 # tokenizer = AutoTokenizer.from_pretrained(model_id)
-# base_model = AutoModelForCausalLM.from_pretrained(
+# model = AutoModelForCausalLM.from_pretrained(
 #     model_id,
-#     load_in_4bit=True,
-#     device_map="auto",
-#     torch_dtype=torch.float16
+#     device_map="auto",      # auto-assign layers to GPU/CPU
+#     load_in_4bit=True,      # 4-bit quantization for 12GB GPU
+#     torch_dtype=torch.float16,
+#     trust_remote_code=True
 # )
-# model = PeftModel.from_pretrained(base_model, peft_model_name)
+# model.eval()
+########
+
+
+# Mistral fake-news LoRA
+########
+model_id = "mistralai/Mistral-7B-Instruct-v0.1"
+peft_model_name = "bpavlsh/Mistral-Fake-News-Detection"
+
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+base_model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    load_in_4bit=True,
+    device_map="auto",
+    torch_dtype=torch.float16
+)
+model = PeftModel.from_pretrained(base_model, peft_model_name)
+########
 
 # Sentence-transformer embedding model
 embedder = SentenceTransformer("all-MiniLM-L6-v2")

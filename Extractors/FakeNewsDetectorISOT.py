@@ -8,8 +8,8 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 import re
 
-# Login to Hugging Face
-login("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")
+# Login to Hugging Face for model access ;)
+login("Enter the hf token here")
 
 # Only If i want to use the LLaMA instead of Mistral model, uncomment below
 ########
