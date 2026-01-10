@@ -29,10 +29,10 @@ login("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")
 ########
 
 
-# Mistral fake-news LoRA
+# Mistral fake-news model
 ########
 model_id = "mistralai/Mistral-7B-Instruct-v0.1"
-peft_model_name = "bpavlsh/Mistral-Fake-News-Detection"
+# peft_model_name = "bpavlsh/Mistral-Fake-News-Detection"
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 base_model = AutoModelForCausalLM.from_pretrained(
@@ -41,14 +41,14 @@ base_model = AutoModelForCausalLM.from_pretrained(
     device_map="auto",
     torch_dtype=torch.float16
 )
-model = PeftModel.from_pretrained(base_model, peft_model_name)
+# model = PeftModel.from_pretrained(base_model, peft_model_name)
 ########
 
 # Sentence-transformer embedding model
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Load HF DATASET
-splits = {'train': 'train.tsv'}
+splits = {'train': 'train.tsv'} # this gets only the train split
 
 hf_data = pd.read_csv(
     "hf://datasets/ErfanMoosaviMonazzah/fake-news-detection-dataset-English/" + splits["train"],
@@ -68,12 +68,13 @@ combined_samples = pd.concat([sample_fake]).reset_index(drop=True)
 def chunk_list(lst, size):
     return [lst[i:i+size] for i in range(0, len(lst), size)]
 
-texts = combined_samples["text"].tolist()
-batches = chunk_list(texts, 5) #sp
+texts = combined_samples["text"].tolist() 
+batches = chunk_list(texts, 5) # process 5 articles at a time
 
 # all_analysis will hold the LLM outputs for each batch
 all_analysis = []
 
+# Process each batch through the LLM as this helps avoid exceeding max token limits
 for batch in batches:
     text_block = ""
     for t in batch:
@@ -95,9 +96,10 @@ for batch in batches:
         max_length=8192
     ).to("cuda")
 
-    output = model.generate(**inputs, max_new_tokens=800)
+    # this generates the output from the model and decodes it to text format for pattern extraction
+    output = base_model.generate(**inputs, max_new_tokens=800)
     output_text = tokenizer.decode(output[0], skip_special_tokens=True)
-    result = output_text.split('[/INST]')[-1].strip() if '[/INST]' in output_text else output_text.strip()
+    result = output_text.split('[/INST]')[-1].strip() if '[/INST]' in output_text else output_text.strip() # trim the response so we only have the model's output not the prompt
 
     all_analysis.append(result)
 
@@ -105,8 +107,8 @@ print("\n=== LLM Batch Analysis Results ===\n")
 print(all_analysis)
 
 # With regex, extract all phrases within quotes since the model outputs patterns are in quotes
-detected_phrases = re.findall(r'"(.*?)"', " ".join(all_analysis))
-detected_phrases = list(set(detected_phrases))
+detected_phrases = re.findall(r'"(.*?)"', " ".join(all_analysis)) 
+detected_phrases = list(set(detected_phrases)) # this attempts to remove duplicates by converting to a set and back to list
 
 print("\n=== Extracted Phrases ===\n", detected_phrases)
 
@@ -118,7 +120,8 @@ real_articles = hf_news[hf_news["label"] == 1]["text"].astype(str).tolist()
 
 print(f"Fake articles: {len(fake_articles)}, Real articles: {len(real_articles)}")
 
-# embed all texts so we can compute similarity to patterns
+# embed all texts so we can compute similarity scores
+# 
 fake_embeddings = embedder.encode(fake_articles, convert_to_tensor=True, show_progress_bar=True)
 real_embeddings = embedder.encode(real_articles, convert_to_tensor=True, show_progress_bar=True)
 pattern_embeddings = embedder.encode(detected_phrases, convert_to_tensor=True)
