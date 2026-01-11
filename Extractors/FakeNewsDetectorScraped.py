@@ -48,7 +48,7 @@ base_model = AutoModelForCausalLM.from_pretrained(
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
 filepath = "/home/tacticrabbit/Datacollectingscripts/healthfeedback_claims4.csv"
-sciencefeed = pd.read_csv(filepath, sep=',', header=None)
+sciencefeed = pd.read_csv(filepath, sep=',', header=0)
 sciencefeed.columns = ['title', 'text', 'label', 'url']
 
 sciencefeed = sciencefeed.dropna(subset=['text']).reset_index(drop=True)
