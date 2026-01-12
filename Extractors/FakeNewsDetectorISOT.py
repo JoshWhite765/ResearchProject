@@ -47,7 +47,7 @@ model = PeftModel.from_pretrained(base_model, peft_model_name)
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
 filepath = "/home/tacticrabbit/ISOTFAKE.csv"
-isot_dataFAKE = pd.read_csv(filepath, sep=',', header=None)
+isot_dataFAKE = pd.read_csv(filepath, sep=',', header=0)
 isot_dataFAKE.columns = [
 'title','text','subject', 'date']
 
