@@ -4,6 +4,7 @@ In order to get a balanced view then multiple data sets are used and the data fr
 The benefit of this study should help future AI models determine how to detect fake news more reliably, using the information from patterns detected to learn of the web sites to trust i.e. those used to seed AI, those articles offering a clear gain to a company or political or religious affiliation, awareness of significant events when fake news is more likely to be triggered and patterns with the timing of fake news.
 
 **The folder structure:** 
+<pre>
 ├── Datasets - The datasets the programs use
 │   ├── ISOTFAKE.csv
 │   ├── ISOTTrue.csv
@@ -37,4 +38,6 @@ The benefit of this study should help future AI models determine how to detect f
     ├── hf_word_freq_barchart.png
     ├── ISOT_word_freq_barchart.png
     ├── LIAR_word_freq_barchart.png
-    └── ScrapedData_word_freq_barchart.png
+    └── ScrapedData_word_freq_barchart.png 
+</pre>
+
