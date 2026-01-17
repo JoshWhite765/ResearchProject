@@ -38,6 +38,7 @@ The benefit of this study should help future AI models determine how to detect f
     ├── hf_word_freq_barchart.png
     ├── ISOT_word_freq_barchart.png
     ├── LIAR_word_freq_barchart.png
-    └── ScrapedData_word_freq_barchart.png 
+    └── ScrapedData_word_freq_barchart.png
+    └── MyOwn_word_freq_barchat.png
 </pre>
 
