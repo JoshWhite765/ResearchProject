@@ -6,7 +6,7 @@ import csv
 # Start URL for HealthFeedback
 BASE_DOMAIN = "https://science.feedback.org"
 
-#ChatGpt: "Remove all analysis text, and extract only the misinformation claim from each article off the site: https://science.feedback.org."
+#ChatGpt: "Extract only the misinformation claim from each article off the site: https://science.feedback.org."
 
 #Crawl the site to get article URLs
 def crawl_site(start_url, max_pages=200):
